@@ -1,15 +1,12 @@
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class Rotate : MonoBehaviour
 {
 
     public float nopeus = 100f;
-    public int s1 = 0;
-    public int s2 = 0;
-    public int s3 = 0;
 
-
-    public Vector3 suunta = new Vector3(); 
+    public Vector3 suunta = new Vector3(0,1,0); 
 
     void Update()
     {
