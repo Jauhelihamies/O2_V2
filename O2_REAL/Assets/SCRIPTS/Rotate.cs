@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class Rotate : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
+    public float nopeus = 100f;
+    public int s1 = 0;
+    public int s2 = 0;
+    public int s3 = 0;
+
+
+    public Vector3 suunta = new Vector3(); 
+
     void Update()
     {
-        
+
+        transform.Rotate(suunta * nopeus * Time.deltaTime);
     }
 }
