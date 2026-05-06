@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Security.Cryptography;
+using NUnit.Framework;
 using UnityEngine;
 
 public class Rotate : MonoBehaviour
@@ -8,18 +10,20 @@ public class Rotate : MonoBehaviour
     private float Energia = 10f;
     private bool OnkoSähköä = false;
     private float Hapentuotto = 0f;
-
-
+    public List<Fan> kaikki = new List<Fan>();
 
     public void Start()
     {
         OnkoSähköä=true;
+        Energy();
     }
     public void Energy()
     {
-        // ÖÖÖÖ....
         Energia += 10;
-
+        foreach (Fan k in kaikki)
+        {
+            k.RotateFan();
+        }
     }
 
 
@@ -31,7 +35,7 @@ public class Rotate : MonoBehaviour
         if (OnkoSähköä == true)
         {
             Hapentuotto += Time.deltaTime *Energia*HappiKerroin;
-            Debug.Log(Hapentuotto.ToString());
+            //Debug.Log(Hapentuotto.ToString());
         }
 
     }
