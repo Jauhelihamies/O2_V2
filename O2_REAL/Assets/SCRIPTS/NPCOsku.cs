@@ -2,6 +2,12 @@ using UnityEngine;
 
 public class BouncyNPC : MonoBehaviour
 {
+    // SHARED SCORE COUNTER
+    public static int totalNPCsClicked = 0;
+
+    // Shared sound lock
+    private static bool isAnyAmbientSoundPlaying = false;
+
     [Header("Visuals")]
     public Sprite secondSprite;
     public int newSortingOrder = -1;
@@ -54,44 +60,49 @@ public class BouncyNPC : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= changeDirTime) { PickNewDirection(); timer = 0; }
 
-        // 2. Ambient Sound Timer (Only plays if NOT already playing a sound)
+        // 2. Ambient Sound Timer
         ambientTimer -= Time.deltaTime;
         if (ambientTimer <= 0)
         {
-            if (!audioSource.isPlaying) // Check to prevent overlapping
+            if (!isAnyAmbientSoundPlaying && !audioSource.isPlaying)
             {
-                PlayAmbientSound();
+                StartCoroutine(PlayAmbientUnique());
             }
             SetNextAmbientTime();
         }
 
-        // 3. Procedural Bounce/Tilt
+        // 3. Procedural Bounce
         float bounce = Mathf.Sin(Time.time * bounceSpeed);
         transform.localScale = new Vector3(initialScale.x + (bounce * squashAmount), initialScale.y - (bounce * squashAmount), initialScale.z);
         transform.rotation = Quaternion.Euler(0, 0, bounce * tiltAmount);
     }
 
-    void PlayAmbientSound()
+    System.Collections.IEnumerator PlayAmbientUnique()
     {
         if (ambientSounds.Length > 0)
         {
+            isAnyAmbientSoundPlaying = true;
             int randomIndex = Random.Range(0, ambientSounds.Length);
             audioSource.clip = ambientSounds[randomIndex];
             audioSource.Play();
+            yield return new WaitWhile(() => audioSource.isPlaying);
+            isAnyAmbientSoundPlaying = false;
         }
-    }
-
-    void SetNextAmbientTime()
-    {
-        ambientTimer = Random.Range(minTimeBetweenSounds, maxTimeBetweenSounds);
     }
 
     public void HandleClick()
     {
         if (isFrozen) return;
 
-        // Immediately stop any ambient sound that is currently playing
-        audioSource.Stop();
+        // INCREMENT GLOBAL SCORE
+        totalNPCsClicked++;
+
+        // Stop ambient sounds
+        if (audioSource.isPlaying)
+        {
+            audioSource.Stop();
+            isAnyAmbientSoundPlaying = false;
+        }
 
         if (secondSprite != null)
         {
@@ -99,20 +110,20 @@ public class BouncyNPC : MonoBehaviour
             spriteRenderer.sortingOrder = newSortingOrder;
         }
 
-        // Play the click sound
         if (clickSounds.Length > 0)
         {
             int randomIndex = Random.Range(0, clickSounds.Length);
             audioSource.PlayOneShot(clickSounds[randomIndex]);
         }
 
-        isFrozen = true; // This prevents Update() from running movement and ambient timers
+        isFrozen = true;
         if (npcCollider != null) npcCollider.enabled = false;
 
         transform.localScale = initialScale;
         transform.rotation = Quaternion.identity;
     }
 
+    void SetNextAmbientTime() => ambientTimer = Random.Range(minTimeBetweenSounds, maxTimeBetweenSounds);
     void PickNewDirection()
     {
         float angle = Random.Range(0f, 360f);

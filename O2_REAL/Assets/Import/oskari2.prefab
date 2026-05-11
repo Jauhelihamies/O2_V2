@@ -180,11 +180,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BouncyNPC
   secondSprite: {fileID: 21300000, guid: 30c65fe6729d0a1469e599a1817c5b8e, type: 3}
-  newSortingOrder: 1
+  newSortingOrder: -1
   clickSounds:
   - {fileID: 8300000, guid: 3a42c9ab32cd4134b94bc0b0b25c6c3f, type: 3}
   - {fileID: 8300000, guid: ebfd299503829da469290575a36b0b17, type: 3}
   - {fileID: 8300000, guid: 22a6ec58a71354b44b2d238041871e4f, type: 3}
+  ambientSounds:
+  - {fileID: 8300000, guid: 5606689cc53f68d4a8a9a4d900bfdd8a, type: 3}
+  - {fileID: 8300000, guid: 7fee50128f9d26c4ea004f1284240610, type: 3}
+  - {fileID: 8300000, guid: 2abd46bf6e1e2344cb9ec2aaba0e670b, type: 3}
+  - {fileID: 8300000, guid: 2d975f1f2bad33d43ae194631562fbd3, type: 3}
+  minTimeBetweenSounds: 5
+  maxTimeBetweenSounds: 10
   moveSpeed: 0.1
   changeDirTime: 6
   bounceSpeed: 5
