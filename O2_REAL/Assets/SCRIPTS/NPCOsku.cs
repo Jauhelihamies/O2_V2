@@ -2,10 +2,16 @@ using UnityEngine;
 
 public class BouncyNPC : MonoBehaviour
 {
+    // A custom structure pairing an individual clip with its own volume slider
+    [System.Serializable]
+    public struct SoundSettings
+    {
+        public AudioClip clip;
+        [Range(0f, 1f)] public float volume; // Individual volume slider from 0 to 1
+    }
+
     // SHARED SCORE COUNTER
     public static int totalNPCsClicked = 0;
-
-    // Shared sound lock
     private static bool isAnyAmbientSoundPlaying = false;
 
     [Header("Visuals")]
@@ -16,10 +22,10 @@ public class BouncyNPC : MonoBehaviour
     private Collider2D npcCollider;
 
     [Header("Audio - Click (Death)")]
-    public AudioClip[] clickSounds;
+    public SoundSettings[] clickSounds; // List with individual volumes
 
     [Header("Audio - Ambient (Wandering)")]
-    public AudioClip[] ambientSounds;
+    public SoundSettings[] ambientSounds; // List with individual volumes
     public float minTimeBetweenSounds = 3f;
     public float maxTimeBetweenSounds = 8f;
     private float ambientTimer;
@@ -82,10 +88,21 @@ public class BouncyNPC : MonoBehaviour
         if (ambientSounds.Length > 0)
         {
             isAnyAmbientSoundPlaying = true;
+
+            // Pick a random SoundSettings element
             int randomIndex = Random.Range(0, ambientSounds.Length);
-            audioSource.clip = ambientSounds[randomIndex];
-            audioSource.Play();
-            yield return new WaitWhile(() => audioSource.isPlaying);
+            SoundSettings selectedSound = ambientSounds[randomIndex];
+
+            if (selectedSound.clip != null)
+            {
+                // Temporarily adjust the AudioSource volume to match this specific clip's setting
+                audioSource.volume = selectedSound.volume;
+                audioSource.clip = selectedSound.clip;
+                audioSource.Play();
+
+                yield return new WaitWhile(() => audioSource.isPlaying);
+            }
+
             isAnyAmbientSoundPlaying = false;
         }
     }
@@ -94,10 +111,8 @@ public class BouncyNPC : MonoBehaviour
     {
         if (isFrozen) return;
 
-        // INCREMENT GLOBAL SCORE
         totalNPCsClicked++;
 
-        // Stop ambient sounds
         if (audioSource.isPlaying)
         {
             audioSource.Stop();
@@ -110,10 +125,17 @@ public class BouncyNPC : MonoBehaviour
             spriteRenderer.sortingOrder = newSortingOrder;
         }
 
+        // Play the click sound with its specific volume setting
         if (clickSounds.Length > 0)
         {
             int randomIndex = Random.Range(0, clickSounds.Length);
-            audioSource.PlayOneShot(clickSounds[randomIndex]);
+            SoundSettings selectedClick = clickSounds[randomIndex];
+
+            if (selectedClick.clip != null)
+            {
+                // PlayOneShot accepts a specific volume scale for this instant play
+                audioSource.PlayOneShot(selectedClick.clip, selectedClick.volume);
+            }
         }
 
         isFrozen = true;

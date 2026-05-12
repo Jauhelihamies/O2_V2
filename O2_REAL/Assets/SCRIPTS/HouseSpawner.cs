@@ -1,10 +1,20 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class HouseSpawner : MonoBehaviour
 {
-    [Header("Setup")]
-    public GameObject npcPrefab;
+    // A custom data structure to pair a Prefab with its custom weight
+    [System.Serializable]
+    public struct SpawnableNPC
+    {
+        public GameObject npcPrefab;
+        [Tooltip("Higher weight = more common. Lower weight = rarer. Set to 1 for ultra-rare, 100 for common.")]
+        public int spawnWeight;
+    }
+
+    [Header("NPC Spawn List")]
+    public List<SpawnableNPC> npcList = new List<SpawnableNPC>();
 
     [Header("Random Spawning Settings")]
     public float minSpawnTime = 8f;
@@ -12,9 +22,9 @@ public class HouseSpawner : MonoBehaviour
     public bool isSpawning = true;
 
     [Header("House Juice (Bouncing)")]
-    public float bounceSpeed = 3f;      // How fast it breathes
-    public float squashAmount = 0.1f;   // How much it stretches
-    public float tiltAmount = 2f;       // How much it leans left/right
+    public float bounceSpeed = 3f;
+    public float squashAmount = 0.1f;
+    public float tiltAmount = 2f;
 
     private Vector3 initialScale;
 
@@ -26,17 +36,13 @@ public class HouseSpawner : MonoBehaviour
 
     void Update()
     {
-        // Procedural "Breathing" animation
-        // Mathf.Sin creates a smooth wave between -1 and 1
         float bounce = Mathf.Sin(Time.time * bounceSpeed);
 
-        // 1. Stretch and Squash (Y shrinks while X grows)
         transform.localScale = new Vector3(
             initialScale.x + (bounce * squashAmount),
             initialScale.y - (bounce * squashAmount),
             initialScale.z);
 
-        // 2. Gentle Tilt (Rotation)
         transform.rotation = Quaternion.Euler(0, 0, bounce * tiltAmount);
     }
 
@@ -47,7 +53,7 @@ public class HouseSpawner : MonoBehaviour
             float randomWait = Random.Range(minSpawnTime, maxSpawnTime);
             yield return new WaitForSeconds(randomWait);
 
-            if (isSpawning && npcPrefab != null)
+            if (isSpawning && npcList.Count > 0)
             {
                 SpawnNPC();
             }
@@ -56,6 +62,36 @@ public class HouseSpawner : MonoBehaviour
 
     void SpawnNPC()
     {
-        Instantiate(npcPrefab, transform.position, Quaternion.identity);
+        // 1. Calculate the total weight of all NPCs combined
+        int totalWeight = 0;
+        foreach (var npc in npcList)
+        {
+            totalWeight += Mathf.Max(0, npc.spawnWeight); // Prevent negative numbers
+        }
+
+        if (totalWeight <= 0) return;
+
+        // 2. Roll a random number between 0 and the total combined weight
+        int rolledValue = Random.Range(0, totalWeight);
+
+        // 3. Figure out which NPC the roll landed on
+        GameObject prefabToSpawn = null;
+        int currentWeightCounter = 0;
+
+        foreach (var npc in npcList)
+        {
+            currentWeightCounter += npc.spawnWeight;
+            if (rolledValue < currentWeightCounter)
+            {
+                prefabToSpawn = npc.npcPrefab;
+                break;
+            }
+        }
+
+        // 4. Instantiate the winning NPC
+        if (prefabToSpawn != null)
+        {
+            Instantiate(prefabToSpawn, transform.position, Quaternion.identity);
+        }
     }
 }
