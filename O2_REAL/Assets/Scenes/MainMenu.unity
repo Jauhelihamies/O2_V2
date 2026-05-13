@@ -717,7 +717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::O2_Text
   nopeus: 160
-  matka: 800
+  matka: 500
 --- !u!1 &1348841775
 GameObject:
   m_ObjectHideFlags: 0
