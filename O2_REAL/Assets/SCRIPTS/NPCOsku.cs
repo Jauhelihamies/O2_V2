@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class BouncyNPC : MonoBehaviour
 {
+    public Rotate O2_Counter;
     // A custom structure pairing an individual clip with its own volume slider
     [System.Serializable]
     public struct SoundSettings
@@ -112,6 +113,8 @@ public class BouncyNPC : MonoBehaviour
         if (isFrozen) return;
 
         totalNPCsClicked++;
+        Rotate Generator = Object.FindAnyObjectByType<Rotate>();
+        Generator.NpcKilled();
 
         if (audioSource.isPlaying)
         {

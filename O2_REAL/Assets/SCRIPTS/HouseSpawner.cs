@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HouseSpawner : MonoBehaviour
 {
+
     // A custom data structure to pair a Prefab with its custom weight
     [System.Serializable]
     public struct SpawnableNPC
@@ -30,6 +31,7 @@ public class HouseSpawner : MonoBehaviour
 
     void Start()
     {
+
         initialScale = transform.localScale;
         StartCoroutine(SpawnNPCRoutine());
     }
@@ -56,6 +58,9 @@ public class HouseSpawner : MonoBehaviour
             if (isSpawning && npcList.Count > 0)
             {
                 SpawnNPC();
+                Rotate Generator = Object.FindAnyObjectByType<Rotate>();
+                Generator.GetNewNpc();
+
             }
         }
     }
