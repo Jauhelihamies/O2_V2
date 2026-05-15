@@ -17,20 +17,13 @@ public class Random_Quote : MonoBehaviour
 
     public void TulostaSatunnainenTeksti()
     {
-        if (tekstit.Length == 0)
-        {
-            Debug.LogWarning("Tekstitaulukko on tyhjä!");
-            return;
-        }
-
-
         int satunnainenIndeksi = Random.Range(0, tekstit.Length);
 
 
         string valittuTeksti = tekstit[satunnainenIndeksi];
 
 
-        Debug.Log("Valittu teksti: " + valittuTeksti);
+
 
 
         if (uiTeksti != null)
