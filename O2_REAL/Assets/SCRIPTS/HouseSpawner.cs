@@ -4,39 +4,53 @@ using UnityEngine;
 
 public class HouseSpawner : MonoBehaviour
 {
-
-    // A custom data structure to pair a Prefab with its custom weight
     [System.Serializable]
     public struct SpawnableNPC
     {
         public GameObject npcPrefab;
-        [Tooltip("Higher weight = more common. Lower weight = rarer. Set to 1 for ultra-rare, 100 for common.")]
+        [Tooltip("Korkeampi luku lisää todennäköisyyttä.")]
         public int spawnWeight;
     }
 
-    [Header("NPC Spawn List")]
-    public List<SpawnableNPC> npcList = new List<SpawnableNPC>();
-
-    [Header("Random Spawning Settings")]
-    public float minSpawnTime = 8f;
-    public float maxSpawnTime = 12f;
+    [Header("NPC Settings")]
+    [SerializeField] private List<SpawnableNPC> npcList = new List<SpawnableNPC>();
+    [SerializeField] private float minSpawnTime = 8f;
+    [SerializeField] private float maxSpawnTime = 12f;
     public bool isSpawning = true;
 
-    [Header("House Juice (Bouncing)")]
-    public float bounceSpeed = 3f;
-    public float squashAmount = 0.1f;
-    public float tiltAmount = 2f;
+    [Header("Juice & Animation Settings")]
+    [SerializeField] private float bounceSpeed = 3f;
+    [SerializeField] private float squashAmount = 0.1f;
+    [SerializeField] private float tiltAmount = 2f;
+
+    [Header("References")]
+    [SerializeField] private Rotate rotateGenerator; // Haetaan mieluiten suoraan Inspectorissa
 
     private Vector3 initialScale;
+    private int totalWeight;
 
     void Start()
     {
-
         initialScale = transform.localScale;
+
+        // Välimuistitetaan kokonaispaino kerran käynnistyksessä
+        CalculateTotalWeight();
+
+        // Haetaan viite automaattisesti käynnistyksessä, jos sitä ei ole asetettu Inspectorissa
+        if (rotateGenerator == null)
+        {
+            rotateGenerator = Object.FindAnyObjectByType<Rotate>();
+        }
+
         StartCoroutine(SpawnNPCRoutine());
     }
 
     void Update()
+    {
+        AnimateHouse();
+    }
+
+    private void AnimateHouse()
     {
         float bounce = Mathf.Sin(Time.time * bounceSpeed);
 
@@ -48,39 +62,39 @@ public class HouseSpawner : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, bounce * tiltAmount);
     }
 
-    IEnumerator SpawnNPCRoutine()
+    private IEnumerator SpawnNPCRoutine()
     {
         while (true)
         {
             float randomWait = Random.Range(minSpawnTime, maxSpawnTime);
-            yield return new WaitForSeconds(randomWait);
+            yield return new WaitForSeconds(randomWait); // Huom: Voit käyttää myös WaitForSecondsRealtime jos peli pausetaan
 
             if (isSpawning && npcList.Count > 0)
             {
                 SpawnNPC();
-                Rotate Generator = Object.FindAnyObjectByType<Rotate>();
-                Generator.GetNewNpc();
 
+                if (rotateGenerator != null)
+                {
+                    rotateGenerator.GetNewNpc();
+                }
             }
         }
     }
 
-    void SpawnNPC()
+    private void CalculateTotalWeight()
     {
-        // 1. Calculate the total weight of all NPCs combined
-        int totalWeight = 0;
+        totalWeight = 0;
         foreach (var npc in npcList)
         {
-            totalWeight += Mathf.Max(0, npc.spawnWeight); // Prevent negative numbers
+            totalWeight += Mathf.Max(0, npc.spawnWeight);
         }
+    }
 
+    private void SpawnNPC()
+    {
         if (totalWeight <= 0) return;
 
-        // 2. Roll a random number between 0 and the total combined weight
         int rolledValue = Random.Range(0, totalWeight);
-
-        // 3. Figure out which NPC the roll landed on
-        GameObject prefabToSpawn = null;
         int currentWeightCounter = 0;
 
         foreach (var npc in npcList)
@@ -88,15 +102,12 @@ public class HouseSpawner : MonoBehaviour
             currentWeightCounter += npc.spawnWeight;
             if (rolledValue < currentWeightCounter)
             {
-                prefabToSpawn = npc.npcPrefab;
+                if (npc.npcPrefab != null)
+                {
+                    Instantiate(npc.npcPrefab, transform.position, Quaternion.identity);
+                }
                 break;
             }
-        }
-
-        // 4. Instantiate the winning NPC
-        if (prefabToSpawn != null)
-        {
-            Instantiate(prefabToSpawn, transform.position, Quaternion.identity);
         }
     }
 }

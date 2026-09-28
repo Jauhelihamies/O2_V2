@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class BUY : MonoBehaviour
@@ -13,13 +12,20 @@ public class BUY : MonoBehaviour
 
         Ray mouseRay = cam.ScreenPointToRay(mousepos);
         RaycastHit hitInfo = new RaycastHit();
-        if(Physics.Raycast(mouseRay, out hitInfo))
+        if (Physics.Raycast(mouseRay, out hitInfo))
         {
-            if (hitInfo.collider.gameObject.CompareTag("Energy"))
+            if (hitInfo.collider.gameObject.CompareTag("Coins"))
             {
                 if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
                 {
-                    Debug.Log("Hiiren oikeaa painiketta klikattu!");
+                    Debug.Log("raha");
+                }
+            }
+            if (hitInfo.collider.gameObject.CompareTag("O2"))
+            {
+                if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+                {
+                    Debug.Log("happi");
                 }
             }
         }
