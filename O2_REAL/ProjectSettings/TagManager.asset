@@ -6,6 +6,7 @@ TagManager:
   tags:
   - O2
   - CableDock
+  - Energy
   layers:
   - Default
   - TransparentFX
