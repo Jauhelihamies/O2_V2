@@ -8,7 +8,7 @@ public class HouseSpawner : MonoBehaviour
     public struct SpawnableNPC
     {
         public GameObject npcPrefab;
-        [Tooltip("Korkeampi luku lisää todennäköisyyttä.")]
+
         public int spawnWeight;
     }
 
@@ -24,7 +24,7 @@ public class HouseSpawner : MonoBehaviour
     [SerializeField] private float tiltAmount = 2f;
 
     [Header("References")]
-    [SerializeField] private Rotate rotateGenerator; // Haetaan mieluiten suoraan Inspectorissa
+
 
     private Vector3 initialScale;
     private int totalWeight;
@@ -36,11 +36,6 @@ public class HouseSpawner : MonoBehaviour
         // Välimuistitetaan kokonaispaino kerran käynnistyksessä
         CalculateTotalWeight();
 
-        // Haetaan viite automaattisesti käynnistyksessä, jos sitä ei ole asetettu Inspectorissa
-        if (rotateGenerator == null)
-        {
-            rotateGenerator = Object.FindAnyObjectByType<Rotate>();
-        }
 
         StartCoroutine(SpawnNPCRoutine());
     }
@@ -73,10 +68,7 @@ public class HouseSpawner : MonoBehaviour
             {
                 SpawnNPC();
 
-                if (rotateGenerator != null)
-                {
-                    rotateGenerator.GetNewNpc();
-                }
+
             }
         }
     }

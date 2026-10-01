@@ -680,7 +680,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77c83e3ba70da104f8fc7283f4dc1260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BUY
-  glowMaterial: {fileID: 0}
+  cryptoPrefab: {fileID: 6923078755235825154, guid: 2d71137b9d3bad240bab0e8098b7b756, type: 3}
+  oPrefab: {fileID: 5768356083013214685, guid: ce46bdb47497a254b8bd9a31a6260c13, type: 3}
 --- !u!1 &7371836761977092015
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,7 +18,7 @@ public class JuicyCursor : MonoBehaviour
     public float squashSpeed = 10f;
 
     [Header("Click Settings")]
-    [Tooltip("Makes it easier to click NPCs. Higher = bigger click radius.")]
+
     public float clickForgiveness = 0.5f;
 
     private Vector2 lastMousePos;
@@ -32,6 +32,8 @@ public class JuicyCursor : MonoBehaviour
             if (canvas != null) parentCanvas = canvas.GetComponent<RectTransform>();
         }
         if (Mouse.current != null) lastMousePos = Mouse.current.position.ReadValue();
+
+
     }
 
     void Update()
@@ -44,7 +46,7 @@ public class JuicyCursor : MonoBehaviour
         RectTransformUtility.ScreenPointToLocalPointInRectangle(parentCanvas, currentMousePos, null, out Vector2 localPos);
         cursorTransform.anchoredPosition = localPos;
 
-        // 2. Click Detection
+
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             DetectNPCClick(currentMousePos);
@@ -74,7 +76,7 @@ public class JuicyCursor : MonoBehaviour
         // Convert screen to world
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, Mathf.Abs(Camera.main.transform.position.z)));
 
-        // Instead of a single point, we check a CIRCLE area (clickForgiveness)
+
         RaycastHit2D hit = Physics2D.CircleCast(worldPos, clickForgiveness, Vector2.zero);
 
         if (hit.collider != null)

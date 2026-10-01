@@ -1,31 +1,37 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class BUY : MonoBehaviour
 {
-
-
     public void Update()
     {
         Camera cam = Camera.main;
+        if (cam == null) return;
 
         Vector2 mousepos = Mouse.current.position.ReadValue();
-
         Ray mouseRay = cam.ScreenPointToRay(mousepos);
-        RaycastHit hitInfo = new RaycastHit();
+        RaycastHit hitInfo;
+
         if (Physics.Raycast(mouseRay, out hitInfo))
         {
-            if (hitInfo.collider.gameObject.CompareTag("Coins"))
+            if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
             {
-                if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+
+                if (PrefabManager.Instance == null)
                 {
-                    Debug.Log("raha");
+
+                    return;
                 }
-            }
-            if (hitInfo.collider.gameObject.CompareTag("O2"))
-            {
-                if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+
+                if (hitInfo.collider.gameObject.CompareTag("Coins"))
                 {
-                    Debug.Log("happi");
+
+                    PrefabManager.Instance.ValitsePrefab(1);
+                }
+                else if (hitInfo.collider.gameObject.CompareTag("O2"))
+                {
+
+                    PrefabManager.Instance.ValitsePrefab(2);
                 }
             }
         }
