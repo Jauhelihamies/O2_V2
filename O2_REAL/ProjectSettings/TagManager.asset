@@ -8,6 +8,7 @@ TagManager:
   - CableDock
   - Energy
   - Coins
+  - CoinText
   layers:
   - Default
   - TransparentFX

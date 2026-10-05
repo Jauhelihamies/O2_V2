@@ -104,6 +104,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: OskuClown Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8652658441015450541, guid: cba02860883ef734cbce8be20153a284, type: 3}
+      propertyPath: coinsPerInterval
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8652658441015450541, guid: cba02860883ef734cbce8be20153a284, type: 3}
+      propertyPath: productionInterval
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

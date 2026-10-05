@@ -10,9 +10,12 @@ public class CoinGenerator : MonoBehaviour
     [Tooltip("How many coins to add each time.")]
     public int coinsPerInterval = 1;
 
-    [Header("UI Reference (Optional)")]
-    [Tooltip("Drag your TextMeshPro text here. If left empty, it will try to find one automatically.")]
-    public TextMeshProUGUI coinText;
+    [Header("UI Settings")]
+    [Tooltip("The Tag assigned to your Coin Text object in the scene.")]
+    public string coinTextTag = "CoinText";
+
+    // Text reference found automatically at runtime
+    private TextMeshProUGUI coinText;
 
     // Shared across ALL instances of this script so the total count stays synchronized
     private static int totalCoins = 0;
@@ -22,10 +25,15 @@ public class CoinGenerator : MonoBehaviour
     {
         timer = generationInterval;
 
-        // If you forgot to drag the text object into the Inspector, try to find one automatically
-        if (coinText == null)
+        // Etsitään tekstikenttä automaattisesti skenestä Tagin perusteella
+        GameObject textObject = GameObject.FindWithTag(coinTextTag);
+        if (textObject != null)
         {
-            coinText = Object.FindFirstObjectByType<TextMeshProUGUI>();
+            coinText = textObject.GetComponent<TextMeshProUGUI>();
+        }
+        else
+        {
+            Debug.LogWarning($"CoinGenerator: Kohdetta tagilla '{coinTextTag}' ei löytynyt skenestä!");
         }
 
         // Initialize display

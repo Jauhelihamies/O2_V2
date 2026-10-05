@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class BouncyNPC : MonoBehaviour
 {
-
     // A custom structure pairing an individual clip with its own volume slider
     [System.Serializable]
     public struct SoundSettings
@@ -21,6 +20,7 @@ public class BouncyNPC : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private bool isFrozen = false;
     private Collider2D npcCollider;
+    private Rigidbody2D rb; // Fysiikkakomponentti törmäyksiä varten
 
     [Header("Audio - Click (Death)")]
     public SoundSettings[] clickSounds; // List with individual volumes
@@ -49,6 +49,7 @@ public class BouncyNPC : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         npcCollider = GetComponent<Collider2D>();
+        rb = GetComponent<Rigidbody2D>(); // Haetaan Rigidbody fysiikkaa varten
         initialScale = transform.localScale;
 
         audioSource = gameObject.AddComponent<AudioSource>();
@@ -56,16 +57,20 @@ public class BouncyNPC : MonoBehaviour
 
         PickNewDirection();
         SetNextAmbientTime();
+        if (HappiManager.Instance != null) HappiManager.Instance.GetNewNpc();
     }
 
     void Update()
     {
         if (isFrozen) return;
 
-        // 1. Movement
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+        // 1. Suunnanvaihdon ajastin (Liike on siirretty FixedUpdateen)
         timer += Time.deltaTime;
-        if (timer >= changeDirTime) { PickNewDirection(); timer = 0; }
+        if (timer >= changeDirTime)
+        {
+            PickNewDirection();
+            timer = 0;
+        }
 
         // 2. Ambient Sound Timer
         ambientTimer -= Time.deltaTime;
@@ -82,6 +87,22 @@ public class BouncyNPC : MonoBehaviour
         float bounce = Mathf.Sin(Time.time * bounceSpeed);
         transform.localScale = new Vector3(initialScale.x + (bounce * squashAmount), initialScale.y - (bounce * squashAmount), initialScale.z);
         transform.rotation = Quaternion.Euler(0, 0, bounce * tiltAmount);
+    }
+
+    // FixedUpdate suorittaa fysiikkaan liittyvän liikkeen tasaisesti
+    void FixedUpdate()
+    {
+        if (isFrozen)
+        {
+            if (rb != null) rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
+        // Liikutetaan hahmoa asettamalla sille tasainen nopeus
+        if (rb != null)
+        {
+            rb.linearVelocity = moveDirection * moveSpeed;
+        }
     }
 
     System.Collections.IEnumerator PlayAmbientUnique()
@@ -110,9 +131,13 @@ public class BouncyNPC : MonoBehaviour
     public void HandleClick()
     {
         if (isFrozen) return;
-
+        NpcMoneyProducer moneyProducer = GetComponent<NpcMoneyProducer>();
+        if (moneyProducer != null)
+        {
+            moneyProducer.enabled = false;
+        }
         totalNPCsClicked++;
-
+        if (HappiManager.Instance != null) HappiManager.Instance.NpcKilled();
         if (audioSource.isPlaying)
         {
             audioSource.Stop();
@@ -137,6 +162,7 @@ public class BouncyNPC : MonoBehaviour
 
         isFrozen = true;
         if (npcCollider != null) npcCollider.enabled = false;
+        if (rb != null) rb.linearVelocity = Vector2.zero; 
 
         transform.localScale = initialScale;
         transform.rotation = Quaternion.identity;

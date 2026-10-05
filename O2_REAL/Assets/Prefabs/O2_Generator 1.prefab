@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5087997076626609874}
   - component: {fileID: 7187205688913320676}
+  - component: {fileID: 6726246434630905005}
   m_Layer: 0
   m_Name: Fan2
   m_TagString: Untagged
@@ -91,6 +92,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &6726246434630905005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154648731138128308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0d1826c5bfcac24abecbb30d49fe526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Drotate
+  useRandomSpeed: 1
+  rotationSpeed: 100
+  minRotationSpeed: 50
+  maxRotationSpeed: 500
+  clockwise: 1
+  isRotating: 1
 --- !u!1 &4102889551183928581
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,6 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1836391958800419440}
   - component: {fileID: 9207359533927232702}
+  - component: {fileID: 8657596683404394465}
   m_Layer: 0
   m_Name: Fan
   m_TagString: Untagged
@@ -182,6 +202,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &8657596683404394465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4102889551183928581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0d1826c5bfcac24abecbb30d49fe526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OptimizedRotate2D
+  useRandomSpeed: 1
+  rotationSpeed: 100
+  minRotationSpeed: 50
+  maxRotationSpeed: 500
+  clockwise: 1
+  isRotating: 1
 --- !u!1 &5768356083013214685
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,9 +230,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5934686215819893512}
   - component: {fileID: 4136421160139420249}
+  - component: {fileID: 7328640577395656809}
   m_Layer: 0
   m_Name: O2_Generator 1
-  m_TagString: O2
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -276,6 +315,18 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &7328640577395656809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5768356083013214685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27a4a9585582f1d4f8ef8401f6450185, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OxGen
 --- !u!1 &6587603222412948077
 GameObject:
   m_ObjectHideFlags: 0

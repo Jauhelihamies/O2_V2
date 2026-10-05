@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 3050938764220161043}
   - component: {fileID: 7763542548954202457}
   - component: {fileID: 4731162092573759457}
-  - component: {fileID: 4177328421765782771}
   - component: {fileID: -1428676981161913916}
+  - component: {fileID: -3516490604491677040}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -115,18 +115,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.6666666, y: 1.6666666, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4177328421765782771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8707004562708361470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b30d1938fb2e3e43b3d68c5d9e2aad3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridSlot
 --- !u!114 &-1428676981161913916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,3 +128,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpriteFader
   fadeDuration: 1
+--- !u!114 &-3516490604491677040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8707004562708361470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39c859472d405c24aaef88202dd5fbc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridCell

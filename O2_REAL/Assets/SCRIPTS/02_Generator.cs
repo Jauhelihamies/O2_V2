@@ -1,97 +1,97 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Rotate : MonoBehaviour
+public class HappiManager : MonoBehaviour
 {
+    // Singleton-viittaus, jonka avulla muut skriptit pääsevät tähän käsiksi
+    public static HappiManager Instance { get; private set; }
+
+    [Header("UI & Visuals")]
     [SerializeField] private SpriteRenderer happiMittariSprite;
     private Vector3 mittarinAlkuperainenKoko;
 
-    private int MAX_tuotto = 10;
-    private float NykyinenHappi = 100;
+    [Header("Oxygen Settings")]
+    private float maxHappi =300f;
+    private float nykyinenHappi = 300f;
+    private float maxTuottoKatto = 40f;
+    private float hapentuotto = 0f;
+    private float hapenKulutus = 0f;
+    private float tulo = 0f;
 
-    private float Energia = 10f;
-    private bool OnkoSähköä = false;
-    private float Hapentuotto = 0f;
+    public int CurrentNPC { get; private set; } = 0;
+    private int aktiivisetHappiPrefabit = 0;
 
-    private float TULO = 0f;
-
-    private float HapenKulutus = 0f;
-    public List<Fan> kaikki = new List<Fan>();
-
-    public int CurrentNPC = 0;
-
-    public void Start()
+    private void Awake()
     {
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    void Start()
+    {
+        hapentuotto += 0.5f;
         if (happiMittariSprite != null)
         {
             mittarinAlkuperainenKoko = happiMittariSprite.transform.localScale;
         }
+        LaskeTulo();
 
-        OnkoSähköä = true;
-        Energy();
     }
 
-    public void Energy()
-    {
-        Energia += 10;
-        foreach (Fan k in kaikki)
-        {
-            k.RotateFan();
-        }
-    }
 
     public void GetNewNpc()
     {
         CurrentNPC++;
-        HapenKulutus += 1;
-        Laske();
+        hapenKulutus += 1f; 
+        LaskeTulo();
     }
 
     public void NpcKilled()
     {
         CurrentNPC--;
-        HapenKulutus -= 1;
-        Laske();
+        hapenKulutus -= 1f;
+
+        if (hapenKulutus < 0) hapenKulutus = 0;
+        LaskeTulo();
     }
 
-    public void Laske()
+   
+    public void RegisterOxygenGenerator()
     {
-        TULO = Hapentuotto - HapenKulutus;
-        if (TULO > 10)
+        aktiivisetHappiPrefabit++;
+
+        hapentuotto += 4f;
+        LaskeTulo();
+    }
+
+
+    public void LaskeTulo()
+    {
+        tulo = hapentuotto - hapenKulutus;
+
+        if (tulo > maxTuottoKatto)
         {
-            TULO = 10;
+            tulo = maxTuottoKatto;
         }
     }
 
     void Update()
     {
-        if (OnkoSähköä == true)
-        {
-            if (Hapentuotto < MAX_tuotto)
-            {
-                Hapentuotto += Time.deltaTime * Energia;
-            }
-            if (Hapentuotto > MAX_tuotto)
-            {
-                Hapentuotto = MAX_tuotto;
-            }
-        }
+        nykyinenHappi += tulo * Time.deltaTime;
+        nykyinenHappi = Mathf.Clamp(nykyinenHappi, 0f, maxHappi);
 
-        // Lasketaan TULO uudestaan, koska Hapentuotto kasvaa ajassa
-        Laske();
-
-        // Happi muuttuu tasaisesti joka sekunti TULO-arvon mukaan
-        NykyinenHappi += TULO * Time.deltaTime;
-
-        // Pidetään happi rajojen (0-100) sisällä
-        NykyinenHappi = Mathf.Clamp(NykyinenHappi, 0f, 100f);
-
-        // Päivitetään mittarin vaakataso (X-akseli)
         PaivitaMittarinKoko();
-        if (NykyinenHappi <= 0)
+
+        if (nykyinenHappi <= 0)
         {
-            SceneManager.LoadScene(2);
+            SceneManager.LoadScene(2); // Game Over
         }
     }
 
@@ -99,9 +99,8 @@ public class Rotate : MonoBehaviour
     {
         if (happiMittariSprite != null)
         {
-            float happiProsentti = NykyinenHappi / 100f;
+            float happiProsentti = nykyinenHappi / maxHappi;
 
-            // Muuttaa vain X-akselia (vaakasuunta)
             happiMittariSprite.transform.localScale = new Vector3(
                 mittarinAlkuperainenKoko.x * happiProsentti,
                 mittarinAlkuperainenKoko.y,
