@@ -41,8 +41,6 @@ public class JuicyCursor : MonoBehaviour
         if (parentCanvas == null || cursorTransform == null || Mouse.current == null) return;
 
         Vector2 currentMousePos = Mouse.current.position.ReadValue();
-
-        // 1. Position Follow
         RectTransformUtility.ScreenPointToLocalPointInRectangle(parentCanvas, currentMousePos, null, out Vector2 localPos);
         cursorTransform.anchoredPosition = localPos;
 
@@ -51,8 +49,6 @@ public class JuicyCursor : MonoBehaviour
         {
             DetectNPCClick(currentMousePos);
         }
-
-        // 3. Juice Logic
         Vector2 movementDelta = currentMousePos - lastMousePos;
         float speed = movementDelta.magnitude;
 

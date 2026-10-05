@@ -96,7 +96,6 @@ public class BouncyNPC : MonoBehaviour
 
             if (selectedSound.clip != null)
             {
-                // Temporarily adjust the AudioSource volume to match this specific clip's setting
                 audioSource.volume = selectedSound.volume;
                 audioSource.clip = selectedSound.clip;
                 audioSource.Play();
@@ -113,8 +112,6 @@ public class BouncyNPC : MonoBehaviour
         if (isFrozen) return;
 
         totalNPCsClicked++;
-        Rotate Generator = Object.FindAnyObjectByType<Rotate>();
-        Generator.NpcKilled();
 
         if (audioSource.isPlaying)
         {
@@ -127,8 +124,6 @@ public class BouncyNPC : MonoBehaviour
             spriteRenderer.sprite = secondSprite;
             spriteRenderer.sortingOrder = newSortingOrder;
         }
-
-        // Play the click sound with its specific volume setting
         if (clickSounds.Length > 0)
         {
             int randomIndex = Random.Range(0, clickSounds.Length);
@@ -136,7 +131,6 @@ public class BouncyNPC : MonoBehaviour
 
             if (selectedClick.clip != null)
             {
-                // PlayOneShot accepts a specific volume scale for this instant play
                 audioSource.PlayOneShot(selectedClick.clip, selectedClick.volume);
             }
         }
