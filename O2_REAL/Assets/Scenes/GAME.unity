@@ -784,6 +784,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1574859342231628975, guid: da1a7bb3ec2651044809a6c199b2ee22, type: 3}
+      propertyPath: coinText
+      value: 
+      objectReference: {fileID: 539100455}
     - target: {fileID: 2136942042471847005, guid: da1a7bb3ec2651044809a6c199b2ee22, type: 3}
       propertyPath: m_Name
       value: CoinGen
