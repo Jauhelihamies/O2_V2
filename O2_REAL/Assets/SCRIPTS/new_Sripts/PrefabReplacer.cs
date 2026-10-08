@@ -5,8 +5,12 @@ public class PrefabManager : MonoBehaviour
 {
     public static PrefabManager Instance { get; private set; }
 
+    [Header("Alkuperäiset Prefabit")]
     public GameObject prefabCoins;
     public GameObject prefabO2;
+
+    [Header("Uusi Easter Egg Prefab")]
+    public GameObject prefabGiant; 
 
     public GameObject ValittuPrefab { get; private set; }
     private GameObject nykyinenObjekti;
@@ -30,13 +34,14 @@ public class PrefabManager : MonoBehaviour
     {
         if (tyyppi == 1) ValittuPrefab = prefabCoins;
         else if (tyyppi == 2) ValittuPrefab = prefabO2;
+        else if (tyyppi == 3) ValittuPrefab = prefabGiant;
     }
 
     public void SpawnValittuPrefab(Vector3 kohdePaikka, GridCell kohdeRuutu)
     {
         if (ValittuPrefab == null || isSpawning) return;
 
-        // Sallitaan spawn vain jos edellisen objektin luontiviive on ohi
+
         if (!isSpawning)
         {
             isSpawning = true;
